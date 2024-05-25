@@ -1,0 +1,9 @@
+Cuando se usan APIs el uso depende de la API en específico. Se necesita enviar la API key con cada request. Pueden haber varias maneras: 
+-Como un parámetro HTTP en la url de request: 
+GET https://myapp.com/api/users/list?apikey=12345678
+
+Como un encabezado HTTP enviado con el request: 
+GET https://myapp.com/api/users/listX-API-Key: 12345678 
+
+(Raramente) Posted Publicado en un punto final de autorización específico, que devuelve otro token o una cookie para enviar con solicitudes posteriores:
+POST https://myapp.com/api/auth{ “token”: “12345678” }

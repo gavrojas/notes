@@ -1,0 +1,205 @@
+TRABAJAR CON REPOS DESDE VSCODE || GITHUB
+
+// CONFIGURAR CREDENCIALES
+________________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________
+Habilitar el credential helper
+git config --global credential.helper cache
+
+
+//CREÉ UN REPO EN EL GITHUB DE CEROS Y QUIERO SUBIR MIS CAMBIOS AL REPO:
+________________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________
+git init
+
+git commit -m "first commit"
+
+git branch -M main // (cambio de master a main en caso de que la rama default sea master)
+
+git remote add origin https://github.com/nombre-user/nombre-repo.git // Este repositorio debe existir en el github ya 
+
+git push -u origin main 
+
+//Si es primera vez es probable que te pida colocar: 
+git push --set-upstream origin main
+
+Guide --> https://guides.github.com/activities/hello-world/
+
+//QUIERO CLONAR UN REPO QUE YA ESTÁ EN LA NUBE EN MIS REPOS O EL REPO DE ALGUIEN MÁS:
+________________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________
+Pueden ser clonados por medio de HTTPS o SSH. Esto crea la carpeta con el . git de una vez en la carpeta en la que decida que quiero clonarlo.  
+git clone URL_REPO
+
+Estar en el directorio del repo
+cd REPO 
+
+Revisar status ramas
+git status // Si hice cambios adicionales y guardé, me muestra los archivos donde hice cambios.
+
+Crear rama local y pasarse a ella (-b la crea de 0)
+git checkout -b feature/gavrojas // donde feature/gavrojas es el nombre de mi rama
+
+Seleccionar cambios a confirmar en rama local y añadir al staging area
+git add . 
+
+Si quiero revisar que es lo que voy a añadir al staging area y confirmar:
+git add -p 
+
+Capturar cambios en el momento con mensaje de confirmación 
+git commit -m "Prueba Upgrade tags"
+
+En caso de que quiera hacer commit a un cambio pequeño y no haya necesidad de dejarlo en la staging area puede usarse el commit
+git commit -a -m "Upgrade tag" 
+
+Subir el cambio al repo online en mi rama 
+git push origin feature/gavrojas // Debe aparecer solo 1 ahead para poder pasarlo a pull request. Si aparecen >0 en behind indica que mi cambio no se hizó sobre la última versión del repo entonces debo hacer pull y merge antes de. 
+
+// RENOMBRAR RAMA POR DEFECTO A MAIN Y BORRAR MASTER 
+________________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________
+
+renombrar rama local
+git branch -m master main
+
+Cambiar la  tracked branch
+git fetch -p origin
+git branch -u origin/main main
+
+cambiar la rama local main 
+git remote set-head origin -a
+
+Opcional, borrar la rama máster, local y remotamente en caso de existir. 
+git branch -D master
+git push origin :master
+
+
+// DESHACIENDO CAMBIOS 
+________________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________
+Restaurar el archivo a el último cambio guardado si este no está en el staging area. 
+git checkout [file]
+git checkout -p [file] //Si quiero confirmar cambio por cambio. 
+
+Deshace el última git add realizado y vuelve al estado original los archivos antes del git add * 
+"Se borran cambios del staging area, lo contrario a git add"
+git reset HEAD [file]
+git reset -p HEAD [file] // Si quiero confirmar el cambio a deshacer
+
+Si me equivoqué o quiero arreglar el mensaje puesto en un commmit ya realizado puedo sobreescribir el commit así: 
+git commit --amend //Esto me abrirá un editor donde pondré mis comentarios adicionales **No usar en commit públicos, esto cambia el commit ID 
+
+Revertir el último commit realizado del todo. Esto crea un nuevo commit colocando los cambios anteriores 
+git revert HEAD
+
+Revertir un commit en específico con el ID 
+git revert [commitID] // Con los primeros 8 carácteres del commit ID (en total 40), ya es identificado
+
+
+// SOLUCIONANDO ERRORES
+________________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________
+Si hice push y me rechazó mis cambios porque el repositorio remoto contiene código que no tengo actualizado en mi local
+git pull 
+merge manually conflicts en caso de haberlos 
+git add files_changed 
+git commit -m "message"
+git push 
+
+// TRABAJANDO CON OTRAS RAMAS Y EN COLABORACIÓN
+________________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________
+Listar todas las ramas 
+git branch 
+
+Listar ramas remotas 
+git branch -r
+
+Crear una nueva rama 
+git branch [new-branch]
+
+Cambiarse a trabajar en rama ya existente
+git checkout feature/gavrojas
+
+Eliminar rama que no queremos (rama que no se diferencia de la main o no tiene cambios por hacer merge)
+git branch -d [rama]
+
+Obligar eliminar una rama (sin importar si tenemos cambios de los cuales no hemos hecho merge)
+git branch -D [rama]
+
+Eliminar rama remota 
+git push --delete origin [rama]
+
+Estando en mi rama main puedo hacer merge de cambios en otra rama con merge 
+git merge [otra rama] //estando en main 
+
+Caso contrario si quiero colocar cambios en main en otra rama desactualizada, me paso a rama desactualizada y lo uso con main 
+git merge main 
+
+Deshacer un merge si hay conflictos y quiero deshacerlo
+git merge --abort
+
+Copiar/traer commits realizados en repo remoto a ramas remotas y ver los commits de otros (sin hacer merge, es la diferencia con git pull)
+git fetch
+
+Obtener el contenido de las ramas remotas sin automáticamente merge ningún contenido en las ramas locales 
+git remote update // Esto hara un fetch del contenido entonces luego haces checkout o merge si lo necesitas 
+
+No perder historial de commits y colocar nuevos commits en la parte superior y entonces hacer merge a la rama main  // El commit base que es usado por una rama es cambiado 
+git rebase [rama]
+
+Podemos combinar 2 commit realizados en uno solo agregando -i 
+git rebase -i main //Esto abrirá un editor y podemos colocar squash a la línea que queremos cambiar, se abrirá otro editor y modificaremos el commit description. Pero luego el push debe ser forzado con git push -f, esto añadirá 2 commits en 1. 
+
+// COMANDOS ADICIONALES GIT PARA REVISIÓN DE LOG, Y TRABAJAR CON ARCHIVOS
+________________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________
+Revisar historial de commits realizados 
+git log 
+
+Revisar commits realizados con detalle de qué cambió en los archivos 
+git log -p //Puedo añadir un -1 para obtener solo el detalle del último (1) commit 
+
+Estos cambios también pueden verse con: 
+git show [idcommit]
+
+Ver la cantidad de líneas agregadas o eliminadas en cada archivo de los commits 
+git log --stat
+
+Ver línea añadidas a un archivo, similar a diff -u sin haber hecho add ni commit 
+git diff
+
+Ver línea añadidas a un archivoque previamente añadí al staging area
+git diff --staged
+
+Eliminar un archivo del repositorio, queda pendiente el commit y el push
+git rm [file]
+
+Cambiar de nombre o mover archivos entre directorios dentro del repo 
+git mv [file] [new_name_file]
+
+Revisar historia gráfico merge y commits (sirve para revisar historia de merge de commits entre ramas y el nuevo commit creado por el merge)
+git log --graph --oneline // --graph imprime una grafica ASCII de los commits y la historia de merges. --oneline imprime cada commit en una única línea
+git log --graph --oneline --all // todas las ramas 
+
+Guardar temporalmente cambios y luego puedo volver a ellos si los necesito. 
+git stash 
+
+restaurar cambios desde stash en la rama actual 
+git stash pop
+
+Ver URLs asociadas con el repo remoto origin (llamado así por defecto)
+git remote -v
+
+Obtener más info acerca del repo remoto. Me puede ayudar a saber si hay commits hechos al repo remoto que no tengo en mi local. 
+git remote show origin 
+
+Si quiero evitar que haya archivos en mi repo para evitar basura o desorden, o archivos generados por el sistema que no quiero que estén:
+-se puede crear un archivo .gitignore e incluir dentro los archivos que quiero ignorar. 
+Tener en cuenta: un # será leído como un comentario; un slash / es un separador de directorios. 
+
+NOTAS DE CLASE GITHUB
+________________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________
+El colaborador tiene permisos mas amplios (fusionar y crear nuevas ramas, cambios en la configuración del repo etc).
+El contribuidor en cambio (contribuye en forma de código con aportes, informes de problemas *issues, solicitudes de extracción etc).

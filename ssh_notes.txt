@@ -1,0 +1,11 @@
+Generar par de llaves pública/privada 
+ssh-keygen -t rsa -b 2048
+
+Conectarse a un servidor SSH 
+ssh <username>@<hostname>
+
+Ubicación de las llaves - home del usuario 
+/users/<user>/.ssh/
+
+Ubicación server configuration file 
+/etc/ssh/sshd_config
